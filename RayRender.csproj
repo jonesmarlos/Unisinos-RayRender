@@ -73,6 +73,7 @@
     <Compile Include="Interfaces\IRayRender.cs" />
     <Compile Include="Interfaces\IReader.cs" />
     <Compile Include="Interfaces\IRender.cs" />
+    <Compile Include="Interfaces\IShading.cs" />
     <Compile Include="Interfaces\IShape.cs" />
     <Compile Include="Interfaces\IVector.cs" />
     <Compile Include="Interfaces\IWorld.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Core\Camera.cs" />
     <Compile Include="Interfaces\IParseable.cs" />
     <Compile Include="Outputs\Output.cs" />
+    <Compile Include="Shadings\PhongShading.cs" />
     <Compile Include="Shapes\CompositeShape.cs" />
     <Compile Include="Shapes\Plane.cs" />
     <Compile Include="Shapes\PrimitiveShape.cs" />

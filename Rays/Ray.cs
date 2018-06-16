@@ -11,11 +11,15 @@ namespace RayRender.Rays
 
         public float Time { get; set; }
 
-        public Ray(IVector origin, IVector direction)
+        public Ray(IVector origin, IVector direction, float time)
         {
-            this.Time = float.MaxValue;
+            this.Time = time;
             this.Direction = direction.Normalize();
             this.Origin = origin.Plus(this.Direction.Times(0.001f));
+        }
+
+        public Ray(IVector origin, IVector direction) : this(origin, direction, float.MaxValue)
+        {
         }
 
         public IVector GetEndAt(float time)

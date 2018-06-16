@@ -1,10 +1,6 @@
 ﻿using RayRender.Images;
 using RayRender.Interfaces;
-using RayRender.Lights;
-using RayRender.Maths;
-using RayRender.Rays;
 using RayRender.Utils;
-using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -15,6 +11,8 @@ namespace RayRender.Renders
         public int MaxRecursionLevel { get; set; }
 
         public bool AntiAliasing { get; set; }
+
+        public IShading Shading { get; set; }
 
         public IColor BackGroundColor { get; set; }
 
@@ -58,40 +56,9 @@ namespace RayRender.Renders
 
             this.World.Lights.ForEach(delegate (ILight light)
             {
-                if (light is AmbientLight)
-                {
-                    IColor lightColor = light.GetColor(hit, null);
-                    IColor shapeColor = hit.IntersectShape.Material.GetColor(hit.Intersection);
-                    IColor resultColor = shapeColor.Intensify(lightColor);
-                    color = color.Blend(resultColor);
-                }
-                else
-                {
-                    IVector lightRayVec = new Vector(hit.Intersection, light.Position);
-                    IRay lightRay = new Ray(hit.Intersection, lightRayVec);
-                    lightRay.Time = lightRayVec.Length();
+                IColor lightColor = this.Shading.GetColor(hit, light);
 
-                    IRayHit obstruction = this.FindHit(lightRay);
-
-                    IColor lightColor = light.GetColor(hit, lightRay);
-
-                    if (obstruction != null)
-                    {
-                        float distanceToLight = lightRayVec.Length();
-                        float distanceToObstruction = new Vector(hit.Intersection, obstruction.Intersection).Length();
-
-                        if (distanceToObstruction < distanceToLight)
-                        {
-                            float shadownFactor = distanceToObstruction / distanceToLight;
-
-                            shadownFactor = shadownFactor * 0.25f;
-
-                            lightColor = lightColor.Intensify(1 - shadownFactor);
-                        }
-                    }
-
-                    color = color.Blend(lightColor);
-                }
+                color = color.Blend(lightColor);
             });
 
             if (depth < this.MaxRecursionLevel)
