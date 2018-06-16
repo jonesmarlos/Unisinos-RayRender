@@ -81,6 +81,9 @@
     <Compile Include="Core\Camera.cs" />
     <Compile Include="Interfaces\IParseable.cs" />
     <Compile Include="Outputs\Output.cs" />
+    <Compile Include="Shadings\AbstractShading.cs" />
+    <Compile Include="Shadings\ShadingFactory.cs" />
+    <Compile Include="Shadings\ToonShading.cs" />
     <Compile Include="Shadings\PhongShading.cs" />
     <Compile Include="Shapes\CompositeShape.cs" />
     <Compile Include="Shapes\Plane.cs" />

@@ -4,12 +4,16 @@ using RayRender.Maths;
 using RayRender.Rays;
 using RayRender.Utils;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace RayRender.Shadings
 {
-    public class PhongShading : AbstractShading
+    public class ToonShading : AbstractShading
     {
-        public PhongShading()
+        public ToonShading()
         {
         }
 
@@ -18,9 +22,7 @@ namespace RayRender.Shadings
             IVector lightRayVec = new Vector(hit.Intersection, light.Position);
             IRay lightRay = new Ray(hit.Intersection, lightRayVec, lightRayVec.Length());
 
-            float diffuseFactor = Math.Max(0.0f, hit.Normal.Dot(lightRay.Direction));
-            IColor diffuseColor = new PixColor(diffuseFactor, diffuseFactor, diffuseFactor);
-            IColor diffuseStrength = hit.IntersectShape.Material.Diffuse.Intensify(diffuseColor);
+            IColor diffuseStrength = hit.IntersectShape.Material.Diffuse;
 
             IVector halfway = lightRay.Direction.Halfway(hit.Ray.Direction.Negate());
             float specularFactor = ((float)Math.Pow(Math.Max(0.0f, hit.Normal.Dot(halfway)), hit.IntersectShape.Material.Shiny));
