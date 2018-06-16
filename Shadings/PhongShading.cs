@@ -1,14 +1,9 @@
 ﻿using RayRender.Images;
 using RayRender.Interfaces;
-using RayRender.Lights;
 using RayRender.Maths;
 using RayRender.Rays;
 using RayRender.Utils;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RayRender.Shadings
 {
@@ -20,16 +15,16 @@ namespace RayRender.Shadings
 
         private IColor GetAmbientLightColor(IRayHit hit, ILight light)
         {
-            IPrimitiveShape shape = hit.IntersectShape;
-            IMaterial material = shape.Material;
-            IColor ambientColor = material.Ambient;
-            IColor lightColor = light.Color.Intensify(ambientColor);
+            IColor ambientColor = hit.IntersectShape.Material.Ambient.Intensify(light.Color);
+
             IColor shapeColor = hit.IntersectShape.Material.GetColor(hit.Intersection);
-            IColor resultColor = shapeColor.Intensify(lightColor);
-            return resultColor;
+
+            IColor lightColor = ambientColor.Intensify(shapeColor);
+
+            return lightColor;
         }
 
-        private IColor GetLightColor(IRayHit hit, ILight light)
+        private IColor GetPointLightColor(IRayHit hit, ILight light)
         {
             IVector lightRayVec = new Vector(hit.Intersection, light.Position);
             IRay lightRay = new Ray(hit.Intersection, lightRayVec, lightRayVec.Length());
@@ -56,12 +51,14 @@ namespace RayRender.Shadings
 
         public IColor GetColor(IRayHit hit, ILight light)
         {
-            if (light is AmbientLight)
+            switch (light.Type)
             {
-                return this.GetAmbientLightColor(hit, light);
-            } else
-            {
-                return this.GetLightColor(hit, light);
+                case LightType.AmbientLight:
+                    return this.GetAmbientLightColor(hit, light);
+                case LightType.PointLight:
+                    return this.GetPointLightColor(hit, light);
+                default:
+                    return new PixColor(0.0f, 0.0f, 0.0f);
             }
         }
 

@@ -207,11 +207,11 @@ namespace RayRender.Inputs
 
                                     if (lightType == "ambient")
                                     {
-                                        parameter.Lights.Insert(currentLight, new AmbientLight());
+                                        parameter.Lights.Insert(currentLight, new Light(LightType.AmbientLight));
                                     }
                                     else
                                     {
-                                        parameter.Lights.Insert(currentLight, new Light());
+                                        parameter.Lights.Insert(currentLight, new Light(LightType.PointLight));
                                     }
 
                                     Logger.Debug("BeginLight({0})", beginLight);

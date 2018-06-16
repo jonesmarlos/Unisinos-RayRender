@@ -78,7 +78,6 @@
     <Compile Include="Interfaces\IVector.cs" />
     <Compile Include="Interfaces\IWorld.cs" />
     <Compile Include="Interfaces\IWriter.cs" />
-    <Compile Include="Lights\AmbientLight.cs" />
     <Compile Include="Core\Camera.cs" />
     <Compile Include="Interfaces\IParseable.cs" />
     <Compile Include="Outputs\Output.cs" />

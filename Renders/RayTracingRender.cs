@@ -1,5 +1,6 @@
 ﻿using RayRender.Images;
 using RayRender.Interfaces;
+using RayRender.Shadings;
 using RayRender.Utils;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -23,6 +24,7 @@ namespace RayRender.Renders
             this.MaxRecursionLevel = 5;
             this.BackGroundColor = new PixColor(0.5f, 0.5f, 0.5f);
             this.World = null;
+            this.Shading = new PhongShading();
         }
         
         public IRayHit FindHit(IRay ray)
