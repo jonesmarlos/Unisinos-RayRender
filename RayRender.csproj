@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DE80982C-81F2-434F-A0E7-152A5EEC6EAE}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>RayRender</RootNamespace>
+    <AssemblyName>RayRender</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Filters\FilterFactory.cs" />
+    <Compile Include="Filters\GrayScale.cs" />
+    <Compile Include="Filters\Inverse.cs" />
+    <Compile Include="Forms\RayRenderForm.cs">
+      <SubType>Form</SubType>
+      <CustomToolNamespace>RayRender.Forms</CustomToolNamespace>
+    </Compile>
+    <Compile Include="Forms\RayRenderForm.Designer.cs">
+      <DependentUpon>RayRenderForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Inputs\Input.cs" />
+    <Compile Include="Interfaces\ICamera.cs" />
+    <Compile Include="Interfaces\IColor.cs" />
+    <Compile Include="Interfaces\IFilter.cs" />
+    <Compile Include="Interfaces\IImage.cs" />
+    <Compile Include="Interfaces\IInput.cs" />
+    <Compile Include="Interfaces\ILight.cs" />
+    <Compile Include="Interfaces\IMaterial.cs" />
+    <Compile Include="Interfaces\IMatrix.cs" />
+    <Compile Include="Interfaces\IOutput.cs" />
+    <Compile Include="Interfaces\IPosProcessing.cs" />
+    <Compile Include="Interfaces\IPreProcessing.cs" />
+    <Compile Include="Interfaces\IPrimitiveShape.cs" />
+    <Compile Include="Interfaces\IRay.cs" />
+    <Compile Include="Interfaces\IRayHit.cs" />
+    <Compile Include="Interfaces\IRayRender.cs" />
+    <Compile Include="Interfaces\IReader.cs" />
+    <Compile Include="Interfaces\IRender.cs" />
+    <Compile Include="Interfaces\IShape.cs" />
+    <Compile Include="Interfaces\IVector.cs" />
+    <Compile Include="Interfaces\IWorld.cs" />
+    <Compile Include="Interfaces\IWriter.cs" />
+    <Compile Include="Lights\AmbientLight.cs" />
+    <Compile Include="Core\Camera.cs" />
+    <Compile Include="Interfaces\IParseable.cs" />
+    <Compile Include="Outputs\Output.cs" />
+    <Compile Include="Shapes\CompositeShape.cs" />
+    <Compile Include="Shapes\Plane.cs" />
+    <Compile Include="Shapes\PrimitiveShape.cs" />
+    <Compile Include="Materials\SolidColorMaterial.cs" />
+    <Compile Include="Interfaces\IExecutable.cs" />
+    <Compile Include="Interfaces\IStage.cs" />
+    <Compile Include="Shapes\ShapeFactory.cs" />
+    <Compile Include="Stages\PreProcessing.cs" />
+    <Compile Include="Stages\PosProcessing.cs" />
+    <Compile Include="Lights\Light.cs" />
+    <Compile Include="Utils\Logger.cs" />
+    <Compile Include="Maths\Matrix.cs" />
+    <Compile Include="Images\PixColor.cs" />
+    <Compile Include="Images\PixImage.cs" />
+    <Compile Include="Rays\Ray.cs" />
+    <Compile Include="Rays\RayHit.cs" />
+    <Compile Include="Filters\Blur.cs" />
+    <Compile Include="Renders\Render.cs" />
+    <Compile Include="Outputs\SceneWriter.cs" />
+    <Compile Include="Utils\Parameters.cs" />
+    <Compile Include="Renders\RayTracingRender.cs" />
+    <Compile Include="Shapes\Sphere.cs" />
+    <Compile Include="Maths\Vector.cs" />
+    <Compile Include="Core\World.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Inputs\SceneReader.cs" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Forms\RayRenderForm.resx">
+      <DependentUpon>RayRenderForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
