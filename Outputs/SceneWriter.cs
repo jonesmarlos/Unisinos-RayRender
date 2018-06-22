@@ -21,7 +21,7 @@ namespace RayRender.Outputs
 
         public void Execute(IWorld parameter)
         {
-            PixImage image = (PixImage)parameter.Image;
+            Images.Image image = (Images.Image)parameter.Image;
             Bitmap bitmap = image.GetBitmap();
             bitmap.Save(this.FileName, ImageFormat.Png);
         }

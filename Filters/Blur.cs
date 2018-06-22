@@ -20,7 +20,7 @@ namespace RayRender.Filters
             {
                 for (int y = 0; y < image.Height; y++)
                 {
-                    List<IColor> colors = new List<IColor>();
+                    List<IRGBColor> colors = new List<IRGBColor>();
 
                     for (int ix = x - this.Level; ix < x + this.Level; ix++)
                     {
@@ -28,13 +28,13 @@ namespace RayRender.Filters
                         {
                             if (ix >= 0 && ix < image.Width && iy >= 0 && iy < image.Height)
                             {
-                                IColor color = image.GetColor(ix, iy);
+                                IRGBColor color = image.GetColor(ix, iy);
                                 colors.Add(color);
                             }
                         }
                     }
 
-                    IColor avgColor = PixColor.Avg(colors.ToArray());
+                    IRGBColor avgColor = RGBColor.Avg(colors.ToArray());
                     
                     image.SetColor(x, y, avgColor);
                 }

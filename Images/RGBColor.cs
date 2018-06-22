@@ -3,14 +3,14 @@ using System;
 
 namespace RayRender.Images
 {
-    public class PixColor : IColor
+    public class RGBColor : IRGBColor
     {
         private float red;
 
         public float Red
         {
             get => this.red;
-            set => this.red = PixColor.EnsureChannel(value);
+            set => this.red = RGBColor.EnsureChannel(value);
         }
 
         private float green;
@@ -18,7 +18,7 @@ namespace RayRender.Images
         public float Green
         {
             get => this.green;
-            set => this.green = PixColor.EnsureChannel(value);
+            set => this.green = RGBColor.EnsureChannel(value);
         }
 
         private float blue;
@@ -26,37 +26,37 @@ namespace RayRender.Images
         public float Blue
         {
             get => this.blue;
-            set => this.blue = PixColor.EnsureChannel(value);
+            set => this.blue = RGBColor.EnsureChannel(value);
         }
 
-        public PixColor(float red, float green, float blue)
+        public RGBColor(float red, float green, float blue)
         {
             this.Red = red;
             this.Green = green;
             this.Blue = blue;
         }
 
-        public IColor Blend(IColor other)
+        public IRGBColor Blend(IRGBColor other)
         {
             float r = this.Red + other.Red;
             float g = this.Green + other.Green;
             float b = this.Blue + other.Blue;
 
-            return new PixColor(r, g, b);
+            return new RGBColor(r, g, b);
         }
 
-        public IColor Intensify(IColor other)
+        public IRGBColor Intensify(IRGBColor other)
         {
             float r = this.Red * other.Red;
             float g = this.Green * other.Green;
             float b = this.Blue * other.Blue;
 
-            return new PixColor(r, g, b);
+            return new RGBColor(r, g, b);
         }
 
-        public IColor Intensify(float scalar)
+        public IRGBColor Intensify(float scalar)
         {
-            IColor color = new PixColor(scalar, scalar, scalar);
+            IRGBColor color = new RGBColor(scalar, scalar, scalar);
             return this.Intensify(color);
         }
 
@@ -70,13 +70,19 @@ namespace RayRender.Images
             return Math.Max(0.0f, Math.Min(1.0f, value));
         }
 
-        public static IColor Avg(params IColor[] colors)
+        public IRGBColor GetGrayScale()
+        {
+            float grayScale = this.Red * 0.27f + this.Green * 0.67f + this.Blue * 0.06f;
+
+            return new RGBColor(grayScale, grayScale, grayScale);
+        }
+        public static IRGBColor Avg(params IRGBColor[] colors)
         {
             float factor = 1.0f / colors.Length;
 
-            IColor resultColor = new PixColor(0, 0, 0);
+            IRGBColor resultColor = new RGBColor(0, 0, 0);
 
-            foreach(IColor color in colors)
+            foreach(IRGBColor color in colors)
             {
                 resultColor.Red += color.Red * factor;
                 resultColor.Green += color.Green * factor;
@@ -85,5 +91,6 @@ namespace RayRender.Images
 
             return resultColor;
         }
+
     }
 }

@@ -9,11 +9,11 @@ namespace RayRender.Lights
     {
         public IVector Position { get; set; }
 
-        public IColor Color { get; set; }
+        public IRGBColor Color { get; set; }
 
         public LightType Type { get; set; }
 
-        public Light(LightType type, IVector position, IColor color)
+        public Light(LightType type, IVector position, IRGBColor color)
         {
             this.Type = type;
             this.Position = position;

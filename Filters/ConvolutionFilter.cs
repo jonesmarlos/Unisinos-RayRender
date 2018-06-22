@@ -17,7 +17,7 @@ namespace RayRender.Filters
 
         public float[,] KernelData { get; set; }
 
-        private static int bound(int value, int endIndex)
+        private static int Bound(int value, int endIndex)
         {
             if (value < 0)
                 return 0;
@@ -43,14 +43,14 @@ namespace RayRender.Filters
             {
                 for (int j = inputHeight - 1; j >= 0; j--)
                 {
-                    IColor newColor = new PixColor(0.0f, 0.0f, 0.0f);
+                    IRGBColor newColor = new RGBColor(0.0f, 0.0f, 0.0f);
                     for (int kw = kernelWidth - 1; kw >= 0; kw--)
                     {
                         for (int kh = kernelHeight - 1; kh >= 0; kh--)
                         {
                             float kv = this.KernelData[kw, kh];
 
-                            IColor color = image.GetColor(bound(i + kw - kernelWidthRadius, inputWidth), bound(j + kh - kernelHeightRadius, inputHeight));
+                            IRGBColor color = image.GetColor(Bound(i + kw - kernelWidthRadius, inputWidth), Bound(j + kh - kernelHeightRadius, inputHeight));
 
                             color = color.Intensify(kv);
 

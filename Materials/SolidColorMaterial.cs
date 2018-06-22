@@ -5,11 +5,11 @@ namespace RayRender.Materials
 {
     public class SolidColorMaterial : IMaterial
     {
-        public IColor Ambient { get; set; }
+        public IRGBColor Ambient { get; set; }
 
-        public IColor Diffuse { get; set; }
+        public IRGBColor Diffuse { get; set; }
 
-        public IColor Specular { get; set; }
+        public IRGBColor Specular { get; set; }
 
         public float Shiny { get; set; }
 
@@ -19,9 +19,9 @@ namespace RayRender.Materials
 
         public float IndexOfRefraction { get; set; }
 
-        public IColor Color { get; set; }
+        public IRGBColor Color { get; set; }
 
-        public SolidColorMaterial(IColor ambient, IColor diffuse, IColor specular, float shiny, float reflection, float refraction, float indexOfRefraction, IColor color)
+        public SolidColorMaterial(IRGBColor ambient, IRGBColor diffuse, IRGBColor specular, float shiny, float reflection, float refraction, float indexOfRefraction, IRGBColor color)
         {
             this.Ambient = ambient;
             this.Diffuse = diffuse;
@@ -48,7 +48,7 @@ namespace RayRender.Materials
             return this.Refraction > 0;
         }
 
-        public IColor GetColor(IVector point)
+        public IRGBColor GetColor(IVector point)
         {
             return this.Color;
         }

@@ -14,6 +14,6 @@ namespace RayRender.Interfaces
 
         IVector Position { get; set; }
 
-        IColor Color { get; set; }
+        IRGBColor Color { get; set; }
     }
 }

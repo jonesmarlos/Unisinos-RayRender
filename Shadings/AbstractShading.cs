@@ -1,31 +1,32 @@
 ﻿using RayRender.Images;
 using RayRender.Interfaces;
 using RayRender.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RayRender.Shadings
 {
     public abstract class AbstractShading : IShading
     {
 
-        public IColor GetAmbientLightColor(IRayHit hit, ILight light)
+        public IPixelColor GetAmbientLightColor(IRayHit hit, ILight light)
         {
-            IColor ambientColor = hit.IntersectShape.Material.Ambient.Intensify(light.Color);
+            IRGBColor ambientColor = hit.IntersectShape.Material.Ambient.Intensify(light.Color);
 
-            IColor shapeColor = hit.IntersectShape.Material.GetColor(hit.Intersection);
+            IRGBColor shapeColor = hit.IntersectShape.Material.GetColor(hit.Intersection);
 
-            IColor lightColor = ambientColor.Intensify(shapeColor);
+            IPixelColor pixelLightColor = new PixelColor
+            {
+                Ambient = ambientColor.Intensify(shapeColor),
+                Diffuse = new RGBColor(0.0f, 0.0f, 0.0f),
+                Specular = new RGBColor(0.0f, 0.0f, 0.0f),
+                Color = ambientColor.Intensify(shapeColor)
+            };
 
-            return lightColor;
+            return pixelLightColor;
         }
 
-        public abstract IColor GetPointLightColor(IRayHit hit, ILight light);
+        public abstract IPixelColor GetPointLightColor(IRayHit hit, ILight light);
 
-        public IColor GetColor(IRayHit hit, ILight light)
+        public IPixelColor GetColor(IRayHit hit, ILight light)
         {
             switch (light.Type)
             {
@@ -34,7 +35,7 @@ namespace RayRender.Shadings
                 case LightType.PointLight:
                     return this.GetPointLightColor(hit, light);
                 default:
-                    return new PixColor(0.0f, 0.0f, 0.0f);
+                    return null;
             }
         }
 

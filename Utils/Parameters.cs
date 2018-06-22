@@ -38,6 +38,11 @@ namespace RayRender.Utils
             return float.NaN;
         }
 
+        public float[] GetFloats(int startIndex)
+        {
+            return this.GetFloats(startIndex, this.Count);
+        }
+
         public float[] GetFloats(int startIndex, int size)
         {
             float[] result = new float[size];
@@ -57,11 +62,11 @@ namespace RayRender.Utils
             return new Vector(xyz[0], xyz[1], xyz[2]);
         }
 
-        public IColor GetColor(int startIndex)
+        public IRGBColor GetColor(int startIndex)
         {
             float[] rgb = this.GetFloats(startIndex, 3);
 
-            return new PixColor(rgb[0], rgb[1], rgb[2]);
+            return new RGBColor(rgb[0], rgb[1], rgb[2]);
         }
 
         public string GetName()

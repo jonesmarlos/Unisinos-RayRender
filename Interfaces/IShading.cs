@@ -2,6 +2,6 @@
 {
     public interface IShading : IParseable
     {
-        IColor GetColor(IRayHit hit, ILight light);
+        IPixelColor GetColor(IRayHit hit, ILight light);
     }
 }

@@ -3,11 +3,11 @@ namespace RayRender.Interfaces
 {
     public interface IMaterial : IParseable
     {
-        IColor Ambient { get; set; }
+        IRGBColor Ambient { get; set; }
 
-        IColor Diffuse { get; set; }
+        IRGBColor Diffuse { get; set; }
 
-        IColor Specular { get; set; }
+        IRGBColor Specular { get; set; }
 
         float Shiny { get; set; }
 
@@ -21,6 +21,6 @@ namespace RayRender.Interfaces
 
         bool IsRefractive();
 
-        IColor GetColor(IVector point);
+        IRGBColor GetColor(IVector point);
     }
 }

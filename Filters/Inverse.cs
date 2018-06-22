@@ -20,7 +20,7 @@ namespace RayRender.Filters
             {
                 for (int y = 0; y < image.Height; y++)
                 {
-                    IColor color = image.GetColor(x, y);
+                    IRGBColor color = image.GetColor(x, y);
 
                     color.Red = 1.0f - color.Red;
                     color.Green = 1.0f - color.Green;

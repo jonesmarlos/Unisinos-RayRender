@@ -20,7 +20,7 @@ namespace RayRender.Filters
             {
                 for (int y = 0; y < image.Height; y++)
                 {
-                    IColor color = image.GetColor(x, y);
+                    IRGBColor color = image.GetColor(x, y);
 
                     float grayScale = (color.Red + color.Green + color.Blue) / 3.0f;
 

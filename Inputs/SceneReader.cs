@@ -370,7 +370,7 @@ namespace RayRender.Inputs
                         int outputHeight = parameters.GetInt(1);
                         string outputFormat = parameters.GetString(2);
 
-                        parameter.Image = new PixImage(outputWidth, outputHeight);
+                        parameter.Image = new Image(outputWidth, outputHeight);
 
                         if (outputFormat == "s")
                         {

@@ -3,10 +3,13 @@ using RayRender.Interfaces;
 using RayRender.Shadings;
 using RayRender.Utils;
 using System.Diagnostics;
+using System.Drawing.Imaging;
 using System.Threading.Tasks;
 
 namespace RayRender.Renders
 {
+    
+
     public class RayTracingRender : IRayRender
     {
         public int MaxRecursionLevel { get; set; }
@@ -15,14 +18,24 @@ namespace RayRender.Renders
 
         public IShading Shading { get; set; }
 
-        public IColor BackGroundColor { get; set; }
+        public IPixelColor BackGroundColor { get; set; }
 
         public IWorld World { get; set; }
+
+        public IShading AuxiliarShading { get; set; }
+
+        public Image AuxiliarImage { get; set; }
 
         public RayTracingRender()
         {
             this.MaxRecursionLevel = 5;
-            this.BackGroundColor = new PixColor(0.5f, 0.5f, 0.5f);
+            this.BackGroundColor = new PixelColor
+            {
+                Ambient = new RGBColor(0.5f, 0.5f, 0.5f),
+                Diffuse = new RGBColor(0.0f, 0.0f, 0.0f),
+                Specular = new RGBColor(0.0f, 0.0f, 0.0f),
+                Color = new RGBColor(0.5f, 0.5f, 0.5f)
+            };
             this.World = null;
             this.Shading = null;
         }
@@ -45,7 +58,7 @@ namespace RayRender.Renders
             return rayHit;
         }
 
-        public IColor Trace(IRay ray, int depth)
+        public IPixelColor Trace(IRay ray, int depth)
         {
             IRayHit hit = this.FindHit(ray);
 
@@ -54,11 +67,17 @@ namespace RayRender.Renders
                 return this.BackGroundColor;
             }
 
-            IColor color = new PixColor(0, 0, 0);
+            IPixelColor color = new PixelColor
+            {
+                Ambient = new RGBColor(0.0f, 0.0f, 0.0f),
+                Diffuse = new RGBColor(0.0f, 0.0f, 0.0f),
+                Specular = new RGBColor(0.0f, 0.0f, 0.0f),
+                Color = new RGBColor(0.0f, 0.0f, 0.0f)
+            };
 
             this.World.Lights.ForEach(delegate (ILight light)
             {
-                IColor lightColor = this.Shading.GetColor(hit, light);
+                IPixelColor lightColor = this.Shading.GetColor(hit, light);
 
                 color = color.Blend(lightColor);
             });
@@ -79,30 +98,29 @@ namespace RayRender.Renders
             return color;
         }
 
-        public IColor GetPixelColor(int col, int row)
+        public IPixelColor GetPixelColor(int col, int row)
         {
             int bmpRow = this.World.Camera.Height - 1 - row;
 
             if (this.AntiAliasing)
             {
                 IRay ray = this.World.Camera.GetRay(col, bmpRow, 0, 0);
-                IColor c1 = this.Trace(ray, 0);
+                IPixelColor c1 = this.Trace(ray, 0);
                 ray = this.World.Camera.GetRay(col, bmpRow, 0.5f, 0);
-                IColor c2 = this.Trace(ray, 0);
+                IPixelColor c2 = this.Trace(ray, 0);
                 ray = this.World.Camera.GetRay(col, bmpRow, 0, 0.5f);
-                IColor c3 = this.Trace(ray, 0);
+                IPixelColor c3 = this.Trace(ray, 0);
                 ray = this.World.Camera.GetRay(col, bmpRow, 0.5f, 0.5f);
-                IColor c4 = this.Trace(ray, 0);
+                IPixelColor c4 = this.Trace(ray, 0);
 
-                IColor color = PixColor.Avg(c1, c2, c3, c4);
+                IPixelColor color = PixelColor.Avg(c1, c2, c3, c4);
 
                 return color;
             }
             else
             {
-
                 IRay ray = this.World.Camera.GetRay(col, bmpRow);
-                IColor color = this.Trace(ray, 0);
+                IPixelColor color = this.Trace(ray, 0);
 
                 return color;
             }
@@ -116,9 +134,12 @@ namespace RayRender.Renders
 
             this.World = parameter;
 
+            this.AuxiliarShading = new AmbientShading();
+            this.AuxiliarImage = new Image(this.World.Camera.Width, this.World.Camera.Height);
+
             int maxPixels = this.World.Camera.Width * this.World.Camera.Height;
 
-            IColor[,] pixels = new IColor[this.World.Camera.Width, this.World.Camera.Height];
+            IPixelColor[,] pixels = new IPixelColor[this.World.Camera.Width, this.World.Camera.Height];
 
             Parallel.For(0, maxPixels,
                 index =>
@@ -133,10 +154,15 @@ namespace RayRender.Renders
             {
                 for (int c = 0; c < this.World.Camera.Width; c++)
                 {
-                    IColor pixelColor = pixels[c, r];
-                    this.World.Image.SetColor(c, r, pixelColor);
+                    this.World.Image.SetColor(c, r, pixels[c, r].Color);
+
+                    IRGBColor ambientColor = pixels[c, r].Ambient;
+
+                    this.AuxiliarImage.SetColor(c, r, ambientColor.GetGrayScale());
                 }
             }
+
+            this.AuxiliarImage.GetBitmap().Save("auxiliar.png", ImageFormat.Png);
 
             watch.Stop();
 
@@ -148,7 +174,7 @@ namespace RayRender.Renders
             switch (parameters.GetName())
             {
                 case "background":
-                    this.BackGroundColor = parameters.GetColor(1);
+                    //this.BackGroundColor = parameters.GetColor(1);
                     break;
                 case "level":
                     this.MaxRecursionLevel = parameters.GetInt(1);
