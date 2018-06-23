@@ -19,6 +19,8 @@ namespace RayRender.Filters
                     return new GrayScale();
                 case "inverse":
                     return new Inverse();
+                case "convolution":
+                    return new ConvolutionFilter();
             }
 
             return null;

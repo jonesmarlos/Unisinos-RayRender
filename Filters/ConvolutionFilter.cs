@@ -3,6 +3,7 @@ using RayRender.Interfaces;
 using RayRender.Utils;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,9 +14,9 @@ namespace RayRender.Filters
     {
         public int Size { get; set; }
 
-        public float KernelDivisor { get; set; }
+        public float Factor { get; set; }
 
-        public float[,] KernelData { get; set; }
+        public float[,] Kernel { get; set; }
 
         private static int Bound(int value, int endIndex)
         {
@@ -30,39 +31,52 @@ namespace RayRender.Filters
         {
             IImage image = parameter.Image;
 
+            image.GetBitmap(ColorType.Ambient).Save("ambient_before.png", ImageFormat.Png);
+
             int inputWidth = image.Width;
             int inputHeight = image.Height;
 
             int kernelWidth = this.Size;
             int kernelHeight = this.Size;
 
-            int kernelWidthRadius = kernelWidth / 2;
-            int kernelHeightRadius = kernelHeight  / 2;
+            int kernelWidthRadius = (kernelWidth - 1) / 2;
+            int kernelHeightRadius = (kernelHeight - 1)  / 2;
 
-            for (int i = inputWidth - 1; i >= 0; i--)
+            for (int w = 0; w < inputWidth; w++)
             {
-                for (int j = inputHeight - 1; j >= 0; j--)
+                for (int h = 0; h < inputHeight; h++)
                 {
-                    IRGBColor newColor = new RGBColor(0.0f, 0.0f, 0.0f);
-                    for (int kw = kernelWidth - 1; kw >= 0; kw--)
+                    float red = 0.0f;
+                    float green = 0.0f;
+                    float blue = 0.0f;
+
+                    for (int kw = 0; kw < kernelWidth; kw++)
                     {
-                        for (int kh = kernelHeight - 1; kh >= 0; kh--)
+                        for (int kh = 0; kh < kernelHeight; kh++)
                         {
-                            float kv = this.KernelData[kw, kh];
+                            float kernelValue = this.Kernel[kw, kh];
 
-                            IRGBColor color = image.GetColor(Bound(i + kw - kernelWidthRadius, inputWidth), Bound(j + kh - kernelHeightRadius, inputHeight));
+                            int iw = w + kw - kernelWidthRadius;
+                            int ih = h + kh - kernelHeightRadius;
 
-                            color = color.Intensify(kv);
+                            if (iw >= 0 && iw < inputWidth && ih >= 0 & ih < inputHeight)
+                            {
+                                IRGBColor color = image.Pixels[iw, ih].Ambient;
 
-                            newColor = newColor.Blend(color);
+                                red += color.Red * kernelValue;
+                                green += color.Green * kernelValue;
+                                blue += color.Blue * kernelValue;
+                            }
                         }
                     }
 
-                    newColor = newColor.Intensify(1.0f / this.KernelDivisor);
+                    image.Pixels[w, h].Ambient = new RGBColor(red * this.Factor, green * this.Factor, blue * this.Factor);
 
-                    image.SetColor(i, j, newColor);
+                    //Logger.Debug("({0}, {1}, {2})", image.Pixels[w, h].Ambient.Red, image.Pixels[w, h].Ambient.Green, image.Pixels[w, h].Ambient.Blue);
                 }
             }
+
+            image.GetBitmap(ColorType.Ambient).Save("ambient_after.png", ImageFormat.Png);
         }
 
         public void Parse(Parameters parameters)
@@ -71,18 +85,18 @@ namespace RayRender.Filters
             {
                 case "size":
                     this.Size = parameters.GetInt(1);
-                    this.KernelData = new float[this.Size, this.Size];
+                    this.Kernel = new float[this.Size, this.Size];
                     break;
-                case "divisor":
-                    this.KernelDivisor = parameters.GetFloat(1);
+                case "factor":
+                    this.Factor = parameters.GetFloat(1);
                     break;
                 case "kernel":
-                    float[] kernelValues = parameters.GetFloats(1);
+                    float[] kernelValues = parameters.GetFloats(1, this.Size * this.Size);
                     for (int i = 0; i < kernelValues.Length; i++)
                     {
                         int x = i % this.Size;
                         int y = i / this.Size;
-                        this.KernelData[x, y] = kernelValues[i];
+                        this.Kernel[x, y] = kernelValues[i];
                     }
                     break;
             }

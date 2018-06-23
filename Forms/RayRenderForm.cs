@@ -1,4 +1,6 @@
 ﻿using RayRender.Core;
+using RayRender.Filters;
+using RayRender.Images;
 using RayRender.Inputs;
 using RayRender.Interfaces;
 using RayRender.Maths;
@@ -34,13 +36,24 @@ namespace RayRender.Forms
 
             Task renderTask = Task.Run(() =>
             {
-                
-
                 IWorld world = new World();
 
-                world.GetStage<Input>(0).Reader = new SceneReader(this.txtFileName.Text);
+                world.Image = Image.LoadFromFile(this.txtFileName.Text);
 
-                world.Execute();
+                ConvolutionFilter filter = new ConvolutionFilter();
+
+                filter.Factor = 1.0f;
+                filter.Size = 3;
+                filter.Kernel = new float[3, 3]{ { -1, -1, -1, },
+                            { -1,  8, -1, },
+                            { -1, -1, -1, }, };
+
+
+                filter.Execute(world);
+
+                //world.GetStage<Input>(0).Reader = new SceneReader(this.txtFileName.Text);
+
+                //world.Execute();
             });
 
             TaskAwaiter awaiter = renderTask.GetAwaiter();

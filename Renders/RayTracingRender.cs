@@ -154,15 +154,11 @@ namespace RayRender.Renders
             {
                 for (int c = 0; c < this.World.Camera.Width; c++)
                 {
-                    this.World.Image.SetColor(c, r, pixels[c, r].Color);
-
-                    IRGBColor ambientColor = pixels[c, r].Ambient;
-
-                    this.AuxiliarImage.SetColor(c, r, ambientColor.GetGrayScale());
+                    this.World.Image.Pixels[c, r] = pixels[c, r];
                 }
             }
 
-            this.AuxiliarImage.GetBitmap().Save("auxiliar.png", ImageFormat.Png);
+            this.World.Image.GetBitmap(ColorType.Ambient).Save("ambient.png", ImageFormat.Png);
 
             watch.Stop();
 

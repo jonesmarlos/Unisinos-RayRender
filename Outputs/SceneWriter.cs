@@ -22,7 +22,7 @@ namespace RayRender.Outputs
         public void Execute(IWorld parameter)
         {
             Images.Image image = (Images.Image)parameter.Image;
-            Bitmap bitmap = image.GetBitmap();
+            Bitmap bitmap = image.GetBitmap(ColorType.Final);
             bitmap.Save(this.FileName, ImageFormat.Png);
         }
     }

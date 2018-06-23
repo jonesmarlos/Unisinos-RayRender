@@ -40,7 +40,7 @@ namespace RayRender.Utils
 
         public float[] GetFloats(int startIndex)
         {
-            return this.GetFloats(startIndex, this.Count);
+            return this.GetFloats(startIndex, this.Count - 1);
         }
 
         public float[] GetFloats(int startIndex, int size)
