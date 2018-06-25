@@ -29,12 +29,14 @@ namespace RayRender.Filters
 
         public void Execute(IWorld parameter)
         {
-            IImage image = parameter.Image;
+            IImage inputImage = parameter.Image;
+            
+            inputImage.GetBitmap(ColorType.Ambient).Save("ambient_before.png", ImageFormat.Png);
 
-            image.GetBitmap(ColorType.Ambient).Save("ambient_before.png", ImageFormat.Png);
+            int inputWidth = inputImage.Width;
+            int inputHeight = inputImage.Height;
 
-            int inputWidth = image.Width;
-            int inputHeight = image.Height;
+            IImage outputImage = new Image(inputWidth, inputHeight);
 
             int kernelWidth = this.Size;
             int kernelHeight = this.Size;
@@ -61,7 +63,7 @@ namespace RayRender.Filters
 
                             if (iw >= 0 && iw < inputWidth && ih >= 0 & ih < inputHeight)
                             {
-                                IRGBColor color = image.Pixels[iw, ih].Ambient;
+                                IRGBColor color = inputImage.Pixels[iw, ih].Ambient;
 
                                 red += color.Red * kernelValue;
                                 green += color.Green * kernelValue;
@@ -70,13 +72,16 @@ namespace RayRender.Filters
                         }
                     }
 
-                    image.Pixels[w, h].Ambient = new RGBColor(red * this.Factor, green * this.Factor, blue * this.Factor);
-
-                    //Logger.Debug("({0}, {1}, {2})", image.Pixels[w, h].Ambient.Red, image.Pixels[w, h].Ambient.Green, image.Pixels[w, h].Ambient.Blue);
+                    outputImage.Pixels[w, h] = new PixelColor()
+                    {
+                        Ambient = new RGBColor(red * this.Factor, green * this.Factor, blue * this.Factor)
+                    };
                 }
             }
 
-            image.GetBitmap(ColorType.Ambient).Save("ambient_after.png", ImageFormat.Png);
+            outputImage.GetBitmap(ColorType.Ambient).Save("ambient_after.png", ImageFormat.Png);
+
+            parameter.Image = outputImage;
         }
 
         public void Parse(Parameters parameters)

@@ -50,9 +50,9 @@
             // 
             // openFileDialog1
             // 
-            this.openFileDialog1.DefaultExt = "*.png";
+            this.openFileDialog1.DefaultExt = "*.render";
             this.openFileDialog1.FileName = "openFileDialog";
-            this.openFileDialog1.Filter = "Images|*.png";
+            this.openFileDialog1.Filter = "Render|*.render";
             // 
             // txtFileName
             // 

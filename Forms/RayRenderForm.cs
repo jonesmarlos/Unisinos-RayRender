@@ -38,22 +38,9 @@ namespace RayRender.Forms
             {
                 IWorld world = new World();
 
-                world.Image = Image.LoadFromFile(this.txtFileName.Text);
+                world.GetStage<Input>(0).Reader = new SceneReader(this.txtFileName.Text);
 
-                ConvolutionFilter filter = new ConvolutionFilter();
-
-                filter.Factor = 1.0f;
-                filter.Size = 3;
-                filter.Kernel = new float[3, 3]{ { -1, -1, -1, },
-                            { -1,  8, -1, },
-                            { -1, -1, -1, }, };
-
-
-                filter.Execute(world);
-
-                //world.GetStage<Input>(0).Reader = new SceneReader(this.txtFileName.Text);
-
-                //world.Execute();
+                world.Execute();
             });
 
             TaskAwaiter awaiter = renderTask.GetAwaiter();

@@ -49,6 +49,7 @@
     <Compile Include="Filters\FilterFactory.cs" />
     <Compile Include="Filters\GrayScale.cs" />
     <Compile Include="Filters\Inverse.cs" />
+    <Compile Include="Filters\ToonFilter.cs" />
     <Compile Include="Forms\RayRenderForm.cs">
       <SubType>Form</SubType>
       <CustomToolNamespace>RayRender.Forms</CustomToolNamespace>
