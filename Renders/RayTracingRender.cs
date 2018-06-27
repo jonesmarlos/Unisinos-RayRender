@@ -3,6 +3,7 @@ using RayRender.Interfaces;
 using RayRender.Maths;
 using RayRender.Rays;
 using RayRender.Shadings;
+using RayRender.Shapes;
 using RayRender.Utils;
 using System.Diagnostics;
 using System.Drawing.Imaging;
@@ -80,6 +81,26 @@ namespace RayRender.Renders
             this.World.Lights.ForEach(delegate (ILight light)
             {
                 IPixelColor lightColor = this.Shading.GetColor(hit, light);
+
+                if (light.Type == LightType.PointLight)
+                {
+                    IVector lightRayVec = new Vector(hit.Intersection, light.Position);
+                    IRay lightRay = new Ray(hit.Intersection, lightRayVec, lightRayVec.Length());
+                    IRayHit obstruction = this.FindHit(lightRay);
+
+                    if (obstruction != null)
+                    {
+                        if (obstruction.IntersectShape is Sphere && obstruction.IntersectShape != hit.IntersectShape)
+                        {
+                            IVector vectorIntersectionToObstruction = new Vector(hit.Intersection, obstruction.Intersection);
+                            float distanceToObstruction = vectorIntersectionToObstruction.Length();
+                            float distanceToLight = lightRayVec.Length();
+                            float distanceFactor = distanceToObstruction / distanceToLight;
+
+                            lightColor.Color = lightColor.Color.Intensify(distanceFactor);
+                        } 
+                    }
+                }
 
                 color = color.Blend(lightColor);
             });
