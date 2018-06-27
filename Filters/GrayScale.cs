@@ -12,8 +12,6 @@ namespace RayRender.Filters
     {
         public void Execute(IWorld parameter)
         {
-            Logger.Debug("Filter GrayScale");
-
             IImage image = parameter.Image;
 
             for (int x = 0; x < image.Width; x++)

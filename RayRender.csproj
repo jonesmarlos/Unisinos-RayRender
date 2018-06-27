@@ -48,6 +48,7 @@
     <Compile Include="Filters\ConvolutionFilter.cs" />
     <Compile Include="Filters\FilterFactory.cs" />
     <Compile Include="Filters\GrayScale.cs" />
+    <Compile Include="Filters\HDRFilter.cs" />
     <Compile Include="Filters\Inverse.cs" />
     <Compile Include="Filters\ToonFilter.cs" />
     <Compile Include="Forms\RayRenderForm.cs">

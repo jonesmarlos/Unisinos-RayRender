@@ -21,6 +21,8 @@ namespace RayRender.Filters
                     return new Inverse();
                 case "toon":
                     return new ToonFilter();
+                case "hdr":
+                    return new HDRFilter();
             }
 
             return null;
