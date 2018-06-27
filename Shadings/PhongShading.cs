@@ -39,7 +39,7 @@ namespace RayRender.Shadings
                 Specular = new RGBColor(specularStrength.Red, specularStrength.Green, specularStrength.Blue),
                 Color = new RGBColor(r, g, b)
             };
-
+            
             return pixelLightColor;
         }
     }

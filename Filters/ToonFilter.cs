@@ -27,8 +27,6 @@ namespace RayRender.Filters
 
             edgeFilter.Execute(parameter);
 
-            
-
             IImage edgeImage = parameter.Image;
 
             IImage outImage = new Image(originalImage.Width, originalImage.Height);
@@ -40,16 +38,11 @@ namespace RayRender.Filters
             {
                 for (int y = 0; y < originalImage.Height; y++)
                 {
-
-                    // final[x][y]c = img[x][y]c * (1 - aux[x][y]) + cor_borda * aux[x][y]
-
                     IRGBColor color = originalImage.Pixels[x, y].Color;
 
-                    float s = (originalImage.Pixels[x, y].Ambient.Red + originalImage.Pixels[x, y].Ambient.Green + originalImage.Pixels[x, y].Ambient.Blue) / 3.0f;
-
-                    float r = color.Red * (1 - s) + edgeImage.Pixels[x, y].Ambient.Red * s;
-                    float g = color.Green * (1 - s) + edgeImage.Pixels[x, y].Ambient.Green * s;
-                    float b = color.Blue * (1 - s) + edgeImage.Pixels[x, y].Ambient.Blue * s;
+                    float r = originalImage.Pixels[x, y].Color.Red * (1 - edgeImage.Pixels[x, y].Ambient.Red);
+                    float g = originalImage.Pixels[x, y].Color.Green * (1 - edgeImage.Pixels[x, y].Ambient.Green);
+                    float b = originalImage.Pixels[x, y].Color.Blue * (1 - edgeImage.Pixels[x, y].Ambient.Blue);
 
                     outImage.Pixels[x, y] = new PixelColor()
                     {
@@ -58,8 +51,8 @@ namespace RayRender.Filters
                 }
             }
 
-            outImage.GetBitmap(ColorType.Final).Save("out.png", ImageFormat.Png);
-
+            //outImage.GetBitmap(ColorType.Final).Save("out.png", ImageFormat.Png);
+            parameter.Image = outImage;
         }
 
         public void Parse(Parameters parameters)

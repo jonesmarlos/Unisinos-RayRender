@@ -31,7 +31,7 @@ namespace RayRender.Filters
         {
             IImage inputImage = parameter.Image;
             
-            inputImage.GetBitmap(ColorType.Ambient).Save("ambient_before.png", ImageFormat.Png);
+            //inputImage.GetBitmap(ColorType.AmbientGrayScale).Save("ambient_before.png", ImageFormat.Png);
 
             int inputWidth = inputImage.Width;
             int inputHeight = inputImage.Height;
@@ -63,7 +63,7 @@ namespace RayRender.Filters
 
                             if (iw >= 0 && iw < inputWidth && ih >= 0 & ih < inputHeight)
                             {
-                                IRGBColor color = inputImage.Pixels[iw, ih].Ambient;
+                                IRGBColor color = inputImage.Pixels[iw, ih].Ambient.GetGrayScale();
 
                                 red += color.Red * kernelValue;
                                 green += color.Green * kernelValue;
@@ -72,14 +72,39 @@ namespace RayRender.Filters
                         }
                     }
 
+                    red *= this.Factor;
+                    if (red > 0.001f)
+                    {
+                        red = 1;
+                    } else
+                    {
+                        red = 0;
+                    }
+                    green *= this.Factor;
+                    if (green > 0.001f)
+                    {
+                        green = 1;
+                    } else
+                    {
+                        green = 0;
+                    }
+                    blue *= this.Factor;
+                    if (blue > 0.001f)
+                    {
+                        blue = 1;
+                    } else
+                    {
+                        blue = 0;
+                    }
+
                     outputImage.Pixels[w, h] = new PixelColor()
                     {
-                        Ambient = new RGBColor(red * this.Factor, green * this.Factor, blue * this.Factor)
+                      Ambient = new RGBColor(red, green, blue)
                     };
                 }
             }
 
-            outputImage.GetBitmap(ColorType.Ambient).Save("ambient_after.png", ImageFormat.Png);
+            //outputImage.GetBitmap(ColorType.Ambient).Save("ambient_after.png", ImageFormat.Png);
 
             parameter.Image = outputImage;
         }

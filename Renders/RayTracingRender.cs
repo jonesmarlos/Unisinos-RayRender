@@ -1,5 +1,7 @@
 ﻿using RayRender.Images;
 using RayRender.Interfaces;
+using RayRender.Maths;
+using RayRender.Rays;
 using RayRender.Shadings;
 using RayRender.Utils;
 using System.Diagnostics;
@@ -158,7 +160,7 @@ namespace RayRender.Renders
                 }
             }
 
-            this.World.Image.GetBitmap(ColorType.Ambient).Save("ambient.png", ImageFormat.Png);
+            //this.World.Image.GetBitmap(ColorType.Ambient).Save("ambient.png", ImageFormat.Png);
 
             watch.Stop();
 
@@ -170,7 +172,14 @@ namespace RayRender.Renders
             switch (parameters.GetName())
             {
                 case "background":
-                    //this.BackGroundColor = parameters.GetColor(1);
+                    IRGBColor color = parameters.GetColor(1);
+                    this.BackGroundColor = new PixelColor
+                    {
+                        Ambient = color,
+                        Diffuse = new RGBColor(0.0f, 0.0f, 0.0f),
+                        Specular = new RGBColor(0.0f, 0.0f, 0.0f),
+                        Color = color
+                    };
                     break;
                 case "level":
                     this.MaxRecursionLevel = parameters.GetInt(1);
